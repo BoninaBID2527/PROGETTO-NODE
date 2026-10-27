@@ -10,7 +10,10 @@
   },
   "jest": {
     "testEnvironment": "node",
-    "testTimeout": 30000
+    "testTimeout": 30000,
+    "setupFiles": [
+      "./tests/env.js"
+    ]
   },
   "engines": {
     "node": ">=18"
