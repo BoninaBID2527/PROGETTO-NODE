@@ -2,6 +2,9 @@ const express = require('express');
 const { notFound, errorHandler } = require('./middleware/errorHandler');
 const passport = require('./config/passport');
 const authRoutes = require('./routes/authRoutes');
+const requireAuth = require('./middleware/auth');
+const shelvesRoutes = require('./routes/shelves.routes');
+const userBooksRoutes = require('./routes/userBooks.routes');
 
 const app = express();
 
@@ -14,6 +17,8 @@ app.get('/api/health', (req, res) => {
 
 app.use('/api/auth', authRoutes);
 
+app.use('/api/shelves', requireAuth, shelvesRoutes);
+app.use('/api/user-books', requireAuth, userBooksRoutes);
 app.use(notFound);
 app.use(errorHandler);
 
