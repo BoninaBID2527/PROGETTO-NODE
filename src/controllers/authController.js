@@ -1,6 +1,7 @@
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const RevokedToken = require('../models/RevokedToken');
 const httpError = require('../utils/httpError');
 
 // Genera il token: "sub" identifica l'utente, "jti" identifica il singolo token
@@ -40,9 +41,17 @@ async function login(req, res) {
   res.json({ token: createToken(user), user });
 }
 
+// POST /api/auth/logout
+// Il token corrente viene revocato: da questo momento non è più accettato
+async function logout(req, res) {
+  const { jti, exp } = req.tokenPayload;
+  await RevokedToken.create({ jti, expiresAt: new Date(exp * 1000) });
+  res.json({ message: 'Logout effettuato' });
+}
+
 // GET /api/auth/me
 function me(req, res) {
   res.json({ user: req.user });
 }
 
-module.exports = { register, login, me };
+module.exports = { register, login, logout, me };
